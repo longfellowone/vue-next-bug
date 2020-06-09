@@ -4,10 +4,10 @@ module.exports = {
     node: true,
   },
   extends: [
+    "plugin:prettier/recommended",
     "plugin:vue/vue3-recommended",
     "eslint:recommended",
     "prettier/vue",
-    "plugin:prettier/recommended",
   ],
   rules: {
     "prettier/prettier": [
@@ -16,6 +16,7 @@ module.exports = {
         endOfLine: "auto",
       },
     ],
+    "vue/singleline-html-element-content-newline": "off",
   },
 };
 // VS Code
