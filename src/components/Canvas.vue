@@ -4,25 +4,28 @@
     class="bg-blue-500 w-full h-full"
     style="user-select: none;"
   >
-    <g id="drawing" :transform="transformStr">
+    <g id="drawing" ref="drawingRef" :transform="transformStr">
       <image
-        data-item="canvas"
-        xlink:href="../assets/drawing.jpg"
+        href="../assets/drawing.jpg"
         width="14400"
         height="10800"
+        draggable="false"
+        style="user-select: none;"
       />
     </g>
-    <g>
+    <g id="markup" :transform="transformStr">
       <rect
-        x="200"
-        y="200"
-        width="60"
-        height="60"
+        v-for="item in data"
+        :key="item"
+        :x="item.x"
+        :y="item.y"
+        width="50"
+        height="50"
         fill="green"
-        transform="translate(30 30)"
-      ></rect>
+        opacity="0.5"
+        @click="clickHandler"
+      />
     </g>
-    <!-- <g></g> -->
   </svg>
 </template>
 
@@ -38,13 +41,20 @@ export default {
     data: { type: Array, default: () => [] },
   },
   setup() {
+    const drawingRef = ref(null);
     const containerRef = ref(null);
     const transformStr = ref(null);
 
     const zoom = d3
       .zoom()
       // .extent([[0, 0], [width, height]])
-      .scaleExtent([0.04, 1])
+      .scaleExtent([0.04, 2])
+      // Returning false in the filter function ignores the event.
+      .filter(
+        () =>
+          !(d3.event.type === "mousedown" && d3.event.button === 0) ||
+          d3.event.button === 2
+      )
       .on("zoom", () => zooming(d3.event));
 
     const zooming = (e) => (transformStr.value = `${e.transform}`);
@@ -56,10 +66,17 @@ export default {
         .call(zoom)
         .call(zoom.transform, initialTransform);
 
-      // d3.select(containerRef.value).on("click", () => console.log("clicked"));
+      d3.select(drawingRef.value).on("click", () => {
+        console.log(
+          parseInt(d3.mouse(drawingRef.value)[0]),
+          parseInt(d3.mouse(drawingRef.value)[1])
+        );
+      });
     });
 
-    return { containerRef, transformStr };
+    const clickHandler = () => console.log("box clicked");
+
+    return { containerRef, drawingRef, transformStr, clickHandler };
   },
 };
 </script>

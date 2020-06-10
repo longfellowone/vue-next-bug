@@ -24,7 +24,14 @@ export default {
   },
   props: {},
   setup() {
-    const data = ["data1", "data2", "data3"];
+    const getRandomInt = (max) => Math.floor(Math.random() * Math.floor(max));
+
+    const data = [];
+
+    for (let i = 0; i < 1000; i++) {
+      data.push({ x: getRandomInt(10000), y: getRandomInt(10000) });
+    }
+
     return { data };
   },
 };

@@ -19,10 +19,3 @@ module.exports = {
     "vue/singleline-html-element-content-newline": "off",
   },
 };
-// VS Code
-// "editor.formatOnSave": true,
-// "editor.codeActionsOnSave": {
-//   "source.fixAll.eslint": true
-// },
-// "vetur.validation.template": false,
-// "eslint.validate": ["javascript", "javascriptreact", "vue"]
