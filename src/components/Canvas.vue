@@ -1,31 +1,54 @@
 <template>
-  <svg
-    ref="containerRef"
-    class="bg-blue-500 w-full h-full"
-    style="user-select: none;"
-  >
-    <g id="drawing" ref="drawingRef" :transform="transformStr">
+  <svg ref="containerRef" class="bg-blue-500 w-full h-full" style="user-select: none;">
+    <g id="canvas" ref="canvasRef" :transform="transformStr">
       <image
         href="../assets/drawing.jpg"
         width="14400"
         height="10800"
         draggable="false"
-        style="user-select: none;"
+        style="user-select: none; user-drag: none;"
       />
-    </g>
-    <g id="markup" :transform="transformStr">
-      <rect
+      <circle
         v-for="item in data"
         :key="item"
-        :x="item.x"
-        :y="item.y"
-        width="50"
-        height="50"
+        :cx="item.x"
+        :cy="item.y"
+        r="30"
         fill="green"
-        opacity="0.5"
+        fill-opacity="0.4"
+        @click="clickHandler"
+      />
+      <circle
+        :cx="mousePosition.x"
+        :cy="mousePosition.y"
+        r="30"
+        fill="green"
+        fill-opacity="0.4"
+        style="pointer-events: none;"
+      />
+    </g>
+    <!-- <g id="markup" :transform="transformStr">
+      <circle
+        v-for="item in data"
+        :key="item"
+        :cx="item.x"
+        :cy="item.y"
+        r="30"
+        fill="green"
+        opacity="0.4"
         @click="clickHandler"
       />
     </g>
+    <g id="draw" :transform="transformStr">
+      <circle
+        :cx="mousePosition.x"
+        :cy="mousePosition.y"
+        r="30"
+        fill="green"
+        opacity="1"
+        style="pointer-events: none;"
+      />
+    </g>-->
   </svg>
 </template>
 
@@ -41,9 +64,11 @@ export default {
     data: { type: Array, default: () => [] },
   },
   setup() {
-    const drawingRef = ref(null);
+    const canvasRef = ref(null);
     const containerRef = ref(null);
     const transformStr = ref(null);
+
+    const mousePosition = ref({ x: 0, y: 0 });
 
     const zoom = d3
       .zoom()
@@ -66,17 +91,30 @@ export default {
         .call(zoom)
         .call(zoom.transform, initialTransform);
 
-      d3.select(drawingRef.value).on("click", () => {
-        console.log(
-          parseInt(d3.mouse(drawingRef.value)[0]),
-          parseInt(d3.mouse(drawingRef.value)[1])
-        );
-      });
+      d3.select(canvasRef.value)
+        .on("click", () => {
+          const x = parseInt(d3.mouse(canvasRef.value)[0]);
+          const y = parseInt(d3.mouse(canvasRef.value)[1]);
+
+          console.log(x, y);
+        })
+        .on("mousemove", () => {
+          const x = d3.mouse(canvasRef.value)[0];
+          const y = d3.mouse(canvasRef.value)[1];
+
+          mousePosition.value = { x, y };
+        });
     });
 
     const clickHandler = () => console.log("box clicked");
 
-    return { containerRef, drawingRef, transformStr, clickHandler };
+    return {
+      containerRef,
+      canvasRef,
+      transformStr,
+      clickHandler,
+      mousePosition,
+    };
   },
 };
 </script>

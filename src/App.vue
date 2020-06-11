@@ -1,9 +1,7 @@
 <template>
   <div class="h-screen flex flex-col">
-    <div class="bg-gray-400 h-24 flex items-center justify-center">
-      Mouse position:
-    </div>
-    <div class="flex flex-1 bg-gray-200 p-8">
+    <div class="bg-gray-400 h-8 flex items-center justify-center">Empty</div>
+    <div class="flex flex-1 bg-gray-200 p-4">
       <div class="flex h-full w-full bg-green-500 items-center justify-center">
         <Canvas :data="data" />
       </div>
