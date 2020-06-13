@@ -1,5 +1,4 @@
 <template>
-  <br />
   <div>Hello from Takeoff</div>
 </template>
 
